@@ -1,0 +1,114 @@
+public class PasswordHasher
+{
+    public String hashAndSavePassword(String password)
+    {
+        hashPassword();
+        savePassword();
+    }
+
+    public void hashPassword()
+    {
+        //hashing implementation
+    }
+    public void savePassword()
+    {
+        //save to the db
+    }
+}
+public String hashPassword(String password, HashingType hashingType)
+{
+    if(HashingType.BASE64.equals(hashingType))
+    {
+        hashedPassword="hashed with Base64";
+    }
+    else if(HashingType.MD5.equals(hashingType))
+    {
+        hashedPassword="hashed with MD5";
+    }
+
+    return hashedPassword;
+}
+public class Base64Hasher implements PasswordHasher
+{
+    @Override
+    public String hashPassword(String password)
+    {
+        return "hashed with 64";
+    }
+}
+public interface PasswordHasher
+{
+    String hashPassword(String password);
+}
+public class MD5Hasher implements PasswordHasher
+{
+    @Override
+    public String hashPassword(String password)
+    {
+        return "hashed with SHA256";
+    }
+}
+
+public abstract class Hashed
+{
+    PasswordHasher passwordHasher;
+    String hash;
+    
+    public void generateHash(String password)
+    {
+        hash = passwordHasher.hashPassword(password);
+    }
+}
+
+public class Base64 extends Hashed
+{
+    public Base64()
+    {
+        this.passwordHasher = new Base64Hasher();
+    }
+}
+public interface PasswordHasher
+{
+    String hashPassword(String password);
+    String decodePasswordFromHash(String hash);
+}
+public interface Decryptable
+{
+    String decodePasswordFromHash(String hash);
+}
+public class Base64Hasher implements PasswordHasher, Decryptable
+{
+    @Override
+    public String hashPassword(String password)
+    {
+        return "hashed with base64";
+    }
+
+    @Override
+    public String decodePasswordFromHash(String hash)
+    {
+        return "decoded from base64";
+    }
+}
+public class PasswordService
+{
+    private Base64Hasher hasher = new Base64Hasher();
+    void hashPassword(String password)
+    {
+        hasher.hashPassword(password);
+    }
+}
+public class PasswordService
+{
+    private PasswordHasher passwordHasher;
+    
+    public PasswordService(PasswordHasher passwordHasher)
+    {
+        this.passwordHasher = passwordHasher;
+    }
+    
+    void hashPassword(String password)
+    {
+        this.passwordHasher.hashPassword(password);
+    }
+}
